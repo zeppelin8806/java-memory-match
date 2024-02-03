@@ -10,37 +10,25 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 /*
- * There are 52 cards in a normal-sized deck of cards (not counting
- * jokers). There are 4 card suits, each with the numbers 2 to 10 and
- * the Jack, Queen, King, and Ace for a total of 13.
- *
- * Go back and modify the code to have a total of 52 cards and 4 copies
- * of each card, meaning x4 2s, x4 3s, x4 Jacks, ... one of each suit.
- * You can use Jacks=11, Queens=12, Kings=12, Aces=13
- *
- * EXTRA: You can use real card faces images instead of numbers by using
- * the images in the CardImages folder and the setFaceUpIcon() method.
+ * TODO: Follow the TODO comments below for instructions
  */
 public class GameBoard extends JFrame implements ActionListener {
 
-    static final int TOTAL_CARDS = 52;
-    static Card firstSelectedCard = null;
-    static Card secondSelectedCard = null;
+    private final String GAME_TITLE = "Memory Game";
+    private final int TOTAL_CARDS = 52;
+
+    private Card firstSelectedCard = null;
+    private Card secondSelectedCard = null;
 
     /*
-     * TODO: 1. Declare an ArrayList of Card objects
+     * TODO: 1. This ArrayList of Card objects is used for the steps below
      */
-    ArrayList<Card> cards;
+    ArrayList<Card> cards = new ArrayList<>();
 
     public void setup() {
 
         /*
-         * TODO: 2. Initialize the ArrayList of Cards to a new ArrayList
-         */
-        cards = new ArrayList<>();
-
-        /*
-         * TODO: 3. Create TOTAL_CARDS number of Card objects and add
+         * TODO: 2. Create TOTAL_CARDS number of Card objects and add
          *  them to the ArrayList. To make a Card object 2 arguments need
          *  to be passed into the Card constructor:
          *      - first argument: the loop index (0-51)
@@ -48,28 +36,23 @@ public class GameBoard extends JFrame implements ActionListener {
          *                         this instance of the GameBoard
          *  example: Card newCard = new Card(0, this);
          */
-        for (int i = 0; i < TOTAL_CARDS; i++) {
-            Card newCard = new Card(i, this);
-            cards.add(newCard);
-        }
+
 
         /*
-         * TODO: 4. Shuffle the order of the cards in the ArrayList
+         * TODO: 3. Shuffle the order of the cards in the ArrayList
          */
-        Collections.shuffle(cards);
+
     }
 
     /*
-     * TODO: 5. Call the draw method on all the cards in the ArrayList
+     * TODO: 4. Call the draw method on all the cards in the ArrayList
      */
     public void drawCards() {
-        for( Card eachCard : cards ) {
-            eachCard.draw();
-        }
+
     }
 
     /*
-     * TODO: 6. Checking if 2 selected cards match
+     * TODO: 5. Checking if 2 selected cards match
      *  - When the user selects the first card to turn over,
      *    the variable "firstSelectedCard" will NOT be null.
      *  - When the user selects the second card to turn over,
@@ -86,45 +69,39 @@ public class GameBoard extends JFrame implements ActionListener {
      */
     public void checkCards() {
 
-        if( firstSelectedCard != null && secondSelectedCard != null ) {
-            // Two cards are selected
-
-            if( firstSelectedCard.isSame(secondSelectedCard) ) {
-                // Match
-
-                // Remove cards from game
-                firstSelectedCard.remove();
-                secondSelectedCard.remove();
-            } else {
-                // No match
-
-                // Keep cards in game and put them both face down
-                firstSelectedCard.setFaceUp(false);
-                secondSelectedCard.setFaceUp(false);
-            }
-
-            // Reset selected cards
-            firstSelectedCard = null;
-            secondSelectedCard = null;
-        }
     }
 
     /*
-     * TODO: 7. return true only if every card in the ArrayList
+     * TODO: 6. return true only if every card in the ArrayList
      *  bas been matched with its pair. Each Card object has a
      *  .isMatched() method that returns "true" if it has been
      *   matched and returns false if it has not been matched.
      */
     private boolean allCardsMatched() {
 
-        for(Card eachCard : cards ) {
-            if( !eachCard.isMatched() ) {
-                return false;
-            }
-        }
-
-        return true;
+        return false;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -153,7 +130,7 @@ public class GameBoard extends JFrame implements ActionListener {
 
     /*
      * Daniel's super secret Java code
-     * You have been warned
+     * You have been warned...
      */
     JPanel panel;
     JLabel timeLabel;
@@ -170,7 +147,7 @@ public class GameBoard extends JFrame implements ActionListener {
     }
 
     private void setupGui(ArrayList<Card> cards) {
-        setTitle("Memory Game");
+        setTitle(GAME_TITLE);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
         setPreferredSize(new Dimension(1090, 500));
