@@ -1,53 +1,55 @@
 package model;
 
+import application.GameBoard;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 
 public class Card extends JButton {
+    /*
+     * Use this for the accessing the card images
+     */
+    private static final String cardImagesPath = "src/main/resources/card-images/";
+    private static final String faceDownImageFilename = cardImagesPath + "B1.png";
 
-    private String value;
+    private ImageIcon faceDownIcon = null;
+    private ImageIcon faceUpIcon = null;
+
+    private int value;
     private boolean faceUp = false;
     private boolean matched = false;
-    private String faceUpImageFilename = null;
-    private ImageIcon faceUpIcon = null;
-    private static String faceDownImageFilename = "https://deckofcardsapi.com/static/img/back.png";
-    public static ImageIcon faceDownIcon = null;;
 
-    public Card(String cardValue, String faceUpImageFilename) {
-        this.value = cardValue;
-        this.faceUpImageFilename = faceUpImageFilename;
-        setup();
+    public Card(int value, GameBoard board) {
+        this.value = value;
+        addActionListener(board);
+        setup(value);
     }
 
-    private void setup() {
+    private void setup(int value) {
         setHorizontalTextPosition(JButton.CENTER);
         setBorder(new LineBorder(Color.BLACK));
         setSize(new Dimension(72, 96));
         setPreferredSize(new Dimension(72, 96));
 
         // Set the image for the card face down
-        if( faceDownIcon == null ) {
+        if (faceDownIcon == null) {
             faceDownIcon = createImageIcon(faceDownImageFilename);
         }
 
-        // Set the image for the card face up
-        if( this.faceUpImageFilename != null ) {
-            this.faceUpIcon = createImageIcon(this.faceUpImageFilename);
-        }
+        // Expecting a loop variable for this.value so +1
+        String faceUpImageFilename = cardImagesPath + (value + 1) + ".png";
+        this.faceUpIcon = createImageIcon(faceUpImageFilename);
 
+        // Start with cards facing down
         setIcon(faceDownIcon);
     }
 
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    public String getValue() {
+    public int getValue() {
         return this.value;
     }
 
@@ -59,28 +61,20 @@ public class Card extends JButton {
         return this.matched;
     }
 
-    public boolean isFaceUp() {
-        return this.faceUp;
-    }
-
     public void setFaceUp(boolean faceUp) {
         this.faceUp = faceUp;
     }
 
-    public void setFaceUpIcon(String filename) {
-        this.faceUpIcon = createImageIcon(filename);
-    }
-
-    public ImageIcon createImageIcon(String imageFileURL) {
+    public ImageIcon createImageIcon(String filename) {
         ImageIcon icon = null;
-
         try {
-//            Image image = ImageIO.read(getClass().getResource(filename));
-            BufferedImage image = ImageIO.read(URI.create(imageFileURL).toURL());
+            BufferedImage image = ImageIO.read(new File(filename));
             icon = new ImageIcon(image.getScaledInstance(72, 96, Image.SCALE_SMOOTH));
-        } catch (IOException | IllegalArgumentException ex) {
-            System.out.println("ERROR: Unable to load image from: " + imageFileURL);
+        } catch (IOException ex) {
+            System.out.println("ERROR: Unable to get image from: " + filename);
             System.out.println(ex);
+        } catch (IllegalArgumentException ex) {
+            System.out.println("ERROR: Unable to get image from: " + filename);
         }
 
         return icon;
@@ -96,11 +90,11 @@ public class Card extends JButton {
     }
 
     public void draw() {
-        if( !this.matched ) {
+        if (!this.matched) {
             // This card is still on the board
 
-            if( this.faceUp ) {
-                if( this.faceUpIcon == null ) {
+            if (this.faceUp) {
+                if (this.faceUpIcon == null) {
                     setText("" + this.value);
                 }
                 setIcon(faceUpIcon);
@@ -112,9 +106,9 @@ public class Card extends JButton {
     }
 
     public boolean isSame(Card otherCard) {
-        if( this.faceUpIcon != null ) {
-            return this.getValue().equalsIgnoreCase(otherCard.getValue());
+        if (this.faceUpIcon == null) {
+            return this.getValue() == otherCard.getValue();
         }
-        return false;
+        return (this.getValue() / 4) == (otherCard.getValue() / 4);
     }
 }
