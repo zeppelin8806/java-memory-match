@@ -36,11 +36,17 @@ public class GameBoard extends JFrame implements ActionListener {
          *                         this instance of the GameBoard
          *  example: Card newCard = new Card(0, this);
          */
+        cards = new ArrayList<>();
 
+        for (int i = 0; i < TOTAL_CARDS; i++) {
+            Card newCard = new Card(i, this);
+            cards.add(newCard);
+        }
 
         /*
          * TODO: 3. Shuffle the order of the cards in the ArrayList
          */
+        Collections.shuffle(cards);
 
     }
 
@@ -48,6 +54,9 @@ public class GameBoard extends JFrame implements ActionListener {
      * TODO: 4. Call the draw method on all the cards in the ArrayList
      */
     public void drawCards() {
+        for (int i = 0; i < TOTAL_CARDS; i++) {
+            cards.get(i).draw();
+        }
 
     }
 
@@ -68,7 +77,17 @@ public class GameBoard extends JFrame implements ActionListener {
      *    cards can be selected by the user.
      */
     public void checkCards() {
-
+        if(firstSelectedCard != null && secondSelectedCard!= null) {
+            if (firstSelectedCard.isSame(secondSelectedCard)) {
+                firstSelectedCard.remove();
+                secondSelectedCard.remove();
+            } else {
+                firstSelectedCard.setFaceUp(false);
+                secondSelectedCard.setFaceUp(false);
+            }
+            firstSelectedCard = null;
+            secondSelectedCard = null;
+        }
     }
 
     /*
@@ -78,8 +97,12 @@ public class GameBoard extends JFrame implements ActionListener {
      *   matched and returns false if it has not been matched.
      */
     private boolean allCardsMatched() {
-
-        return false;
+        for(Card eachcard : cards){
+            if(eachcard.isMatched() != true){
+                return false;
+            }
+        }
+        return true;
     }
 
 
