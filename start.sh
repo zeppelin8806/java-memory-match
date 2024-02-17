@@ -5,4 +5,4 @@ else
     go get github.com/yudai/gotty
 fi
 
-go/bin/gotty -w java -jar music-theory.jar
+go/bin/gotty -w java -jar Memory-Match.jar
